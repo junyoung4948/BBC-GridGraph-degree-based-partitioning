@@ -94,11 +94,56 @@ The large dataset files are not included in this repository. You must download a
     # Expected output contains: Official node count from documentation = 41,652,230
     ```
 
+### Step 2.5: Manual Execution (수동 실행 가이드)
+
+제공된 쉘 스크립트를 사용한 자동화된 실험 파이프라인 외에, 특정 전처리나 PageRank 알고리즘을 개별적으로 실행하고 싶을 경우 아래 가이드를 따르세요.
+
+#### 1. Graph Preprocessing (그래프 전처리)
+
+다운로드한 데이터셋(`*.bin`)을 GridGraph가 사용할 수 있는 그리드 형식으로 변환합니다.
+
+* **Baseline (ID-based) Preprocessing**:
+    ```bash
+    # Usage: ./bin/preprocess -i [input path] -o [output path] -v [vertices] -p [partitions] -t [edge type]
+    # Example for LiveJournal
+    ./bin/preprocess -i ./data/soc-LiveJournal1.bin -o ./data/lj_grid_baseline/ -v 4847571 -p 16 -t 0
+    ```
+
+* **Degree-Based (DV) Preprocessing**:
+    `preprocess_dv` 바이너리를 사용합니다. 사용법은 동일합니다.
+    ```bash
+    # Usage: ./bin/preprocess_dv -i [input path] -o [output path] -v [vertices] -p [partitions] -t [edge type]
+    # Example for LiveJournal
+    ./bin/preprocess_dv -i ./data/soc-LiveJournal1.bin -o ./data/lj_grid_dv/ -v 4847571 -p 16 -t 0
+    ```
+    * `-v`: 정점(vertex)의 수. `txt2bin_fast` 실행 시 출력된 값을 사용합니다.
+    * `-p`: 파티션의 수.
+    * `-t`: 엣지 타입. `0`은 가중치 없음(unweighted), `1`은 가중치 있음(weighted)을 의미합니다.
+
+#### 2. Running PageRank (PageRank 실행)
+
+전처리된 그리드 파일에 PageRank 알고리즘을 실행합니다.
+
+* **Baseline PageRank**:
+    ```bash
+    # Usage: ./bin/pagerank [grid path] [number of iterations] [memory budget in GB]
+    # Example for LiveJournal
+    ./bin/pagerank ./data/lj_grid_baseline/ 10 32
+    ```
+
+* **Degree-Based (DV) PageRank**:
+    `pagerank_dv` 바이너리를 사용합니다. 사용법은 동일합니다.
+    ```bash
+    # Usage: ./bin/pagerank_dv [grid path] [number of iterations] [memory budget in GB]
+    # Example for LiveJournal
+    ./bin/pagerank_dv ./data/lj_grid_dv/ 10 32
+    ```
+
 ## Step 3: Running the Experiments
 
 The experiment is conducted in two phases.
 
-**IMPORTANT**: Before starting, you must complete the one-time setup described in the **[Appendix: Sudo Configuration for Automation](#appendix-sudo-configuration-for-automation)** section. This is required for the scripts to run automatically without password prompts.
+Before starting, you may need setup described in the **[Appendix: Sudo Configuration for Automation](#appendix-sudo-configuration-for-automation)** section. This is required for the scripts to run automatically without password prompts.
 
 ### Phase 1: Finding Optimal P
 
