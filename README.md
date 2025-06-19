@@ -8,13 +8,14 @@ This document provides a step-by-step guide to reproduce the performance evaluat
 
 ## Table of Contents
 1. [Prerequisites](#1-prerequisites)
-2. [Step 1: Setup and Compilation](#step-1-setup-and-compilation)
+2. [Step 1: Setup and Compilation](#step-1-setup-and-compilation) 
 3. [Step 2: Dataset Preparation](#step-2-dataset-preparation)
-4. [Step 3: Running the Experiments](#step-3-running-the-experiments)
+4. [Step 2.5: Manual Execution](#step-25-manual-execution-수동-실행-가이드)
+5. [Step 3: Running the Experiments](#step-3-running-the-experiments)
     - [Phase 1: Finding Optimal P](#phase-1-finding-optimal-p)
     - [Phase 2: Final Performance Measurement](#phase-2-final-performance-measurement)
-5. [Step 4: Analyzing Results](#step-4-analyzing-results)
-6. [Appendix: Sudo Configuration for Automation](#appendix-sudo-configuration-for-automation)
+6. [Step 4: Analyzing Results](#step-4-analyzing-results)
+7. [Appendix: Sudo Configuration for Automation](#appendix-sudo-configuration-for-automation)
 
 ---
 
