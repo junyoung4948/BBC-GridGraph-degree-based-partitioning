@@ -10,7 +10,7 @@ This document provides a step-by-step guide to reproduce the performance evaluat
 1. [Prerequisites](#1-prerequisites)
 2. [Step 1: Setup and Compilation](#step-1-setup-and-compilation) 
 3. [Step 2: Dataset Preparation](#step-2-dataset-preparation)
-4. [Step 2.5: Manual Execution](#step-25-manual-execution-수동-실행-가이드)
+4. [Step 2.5: Manual Execution](#step-25-manual-execution)
 5. [Step 3: Running the Experiments](#step-3-running-the-experiments)
     - [Phase 1: Finding Optimal P](#phase-1-finding-optimal-p)
     - [Phase 2: Final Performance Measurement](#phase-2-final-performance-measurement)
@@ -95,13 +95,12 @@ The large dataset files are not included in this repository. You must download a
     # Expected output contains: Official node count from documentation = 41,652,230
     ```
 
-### Step 2.5: Manual Execution (수동 실행 가이드)
+### Step 2.5: Manual Execution 
 
-제공된 쉘 스크립트를 사용한 자동화된 실험 파이프라인 외에, 특정 전처리나 PageRank 알고리즘을 개별적으로 실행하고 싶을 경우 아래 가이드를 따르세요.
+This guide explains how to run the preprocessing and PageRank steps individually, separate from the automated experiment scripts.
+#### 1. Graph Preprocessing 
 
-#### 1. Graph Preprocessing (그래프 전처리)
-
-다운로드한 데이터셋(`*.bin`)을 GridGraph가 사용할 수 있는 그리드 형식으로 변환합니다.
+This step converts the downloaded dataset (*.bin) into the grid format that GridGraph uses.
 
 * **Baseline (ID-based) Preprocessing**:
     ```bash
@@ -111,19 +110,19 @@ The large dataset files are not included in this repository. You must download a
     ```
 
 * **Degree-Based (DV) Preprocessing**:
-    `preprocess_dv` 바이너리를 사용합니다. 사용법은 동일합니다.
+    Uses the `preprocess_dv` binary. The command-line arguments are the same.
     ```bash
     # Usage: ./bin/preprocess_dv -i [input path] -o [output path] -v [vertices] -p [partitions] -t [edge type]
     # Example for LiveJournal
     ./bin/preprocess_dv -i ./data/soc-LiveJournal1.bin -o ./data/lj_grid_dv/ -v 4847571 -p 16 -t 0
     ```
-    * `-v`: 정점(vertex)의 수. `txt2bin_fast` 실행 시 출력된 값을 사용합니다.
-    * `-p`: 파티션의 수.
-    * `-t`: 엣지 타입. `0`은 가중치 없음(unweighted), `1`은 가중치 있음(weighted)을 의미합니다.
+    * `-v`: The number of vertices. Use the value that was output when you ran `txt2bin_fast`.
+    * `-p`: The number of partitions.
+    * `-t`: The edge type. Use 0 for unweighted graphs and 1 for weighted graphs.
 
-#### 2. Running PageRank (PageRank 실행)
+#### 2. Running PageRank 
 
-전처리된 그리드 파일에 PageRank 알고리즘을 실행합니다.
+This step runs the PageRank algorithm on a preprocessed grid directory.
 
 * **Baseline PageRank**:
     ```bash
@@ -133,7 +132,7 @@ The large dataset files are not included in this repository. You must download a
     ```
 
 * **Degree-Based (DV) PageRank**:
-    `pagerank_dv` 바이너리를 사용합니다. 사용법은 동일합니다.
+    Uses the `pagerank_dv` binary. The usage is the same.
     ```bash
     # Usage: ./bin/pagerank_dv [grid path] [number of iterations] [memory budget in GB]
     # Example for LiveJournal
