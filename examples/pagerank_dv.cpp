@@ -15,6 +15,22 @@ Copyright (c) 2014-2015 Xiaowei Zhu, Tsinghua University
 */
 
 #include "core/graph.hpp"
+#include <vector>
+#include <fstream>
+#include <iostream>
+
+void load_out_degree(const std::string &path, size_t vertices, std::vector<uint32_t> &out_degree) {
+    // out_degree ÀÐ±â
+    std::ifstream out_degree_file(path + "/out_degree_preprocess.data", std::ios::binary);
+	if (!out_degree_file) {
+        std::cerr << "Error opening file: " << path + "/out_degree.data" << std::endl;
+        exit(1);
+    }
+    for (size_t i = 0; i < vertices; ++i) {
+        out_degree_file.read(reinterpret_cast<char*>(&out_degree[i]), sizeof(uint32_t));
+    }
+    out_degree_file.close();
+}
 
 int main(int argc, char ** argv) {
 	if (argc<3) {
@@ -27,8 +43,8 @@ int main(int argc, char ** argv) {
 
 	Graph graph(path);
 	graph.set_memory_bytes(memory_bytes);
-	BigVector<VertexId> degree(graph.path+"/degree", graph.vertices);
-	BigVector<VertexId> in_degree(graph.path+"/in_degree", graph.vertices);
+	// BigVector<VertexId> degree(graph.path+"/degree", graph.vertices);
+	// BigVector<VertexId> in_degree(graph.path+"/in_degree", graph.vertices);
 	BigVector<float> pagerank(graph.path+"/pagerank", graph.vertices);
 	BigVector<float> sum(graph.path+"/sum", graph.vertices);
 
@@ -37,16 +53,18 @@ int main(int argc, char ** argv) {
 
 	double begin_time = get_time();
 
-	degree.fill(0);
-	in_degree.fill(0);
-	graph.stream_edges<VertexId>(
-		[&](Edge & e){
-			write_add(&degree[e.source], 1);
-			write_add(&in_degree[e.target], 1);
-			return 0;
-		}, nullptr, 0, 0
-	);
-	printf("degree calculation used %.2f seconds\n", get_time() - begin_time);
+	// degree.fill(0);
+	// in_degree.fill(0);
+	// graph.stream_edges<VertexId>(
+	// 	[&](Edge & e){
+	// 		write_add(&degree[e.source], 1);
+	// 		write_add(&in_degree[e.target], 1);
+	// 		return 0;
+	// 	}, nullptr, 0, 0
+	// );
+	std::vector<uint32_t> degree(graph.vertices, 0);
+	load_out_degree(graph.path, graph.vertices, degree);
+	printf("degree read used %.2f seconds\n", get_time() - begin_time);
 	fflush(stdout);
 
 	graph.hint(pagerank, sum);

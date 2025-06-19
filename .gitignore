@@ -1,3 +1,9 @@
+/data/
+/final_results/
+/p_test_hybrid_results/
+/experiment_outputs/
+/outputs/
+/.vscode/
 # Compiled Object files
 *.slo
 *.lo

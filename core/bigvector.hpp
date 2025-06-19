@@ -86,6 +86,7 @@ public:
 			close(fout);
 		}
 		fd = open(path.c_str(), O_RDWR | O_DIRECT);
+		// perror("error message: ");
 		assert(fd!=-1);
 		open_mmap();
 	}
